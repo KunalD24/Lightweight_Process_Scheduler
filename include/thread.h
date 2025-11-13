@@ -13,6 +13,7 @@ typedef struct thread
     ucontext_t context;
     void *stack;
     thread_state state;
+    void *thread_data;
     struct thread *next;
 } thread_t;
 
