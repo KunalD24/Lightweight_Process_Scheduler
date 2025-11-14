@@ -6,6 +6,6 @@
 extern thread_t *ready_queue;
 
 void scheduler_add_thread();
-thread_t scheduler_pick_next_thread();
+thread_t* scheduler_pick_next_thread();
 void scheduler_remove_thread();
 #endif

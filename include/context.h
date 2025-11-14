@@ -4,9 +4,7 @@
 #include<ucontext.h>
 #include"thread.h"
 
-void context_create();
-void context_save();
-void context_restore();
-void context_switch();
+void context_create(thread_t *thread, void (*func)(void *), void *arg);
+void context_switch(thread_t *from, thread_t *to);
 
 #endif
