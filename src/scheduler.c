@@ -1,0 +1,34 @@
+#include "scheduler.h"
+#include<stdlib.h>
+
+thread_t *ready_queue = NULL;
+
+void scheduler_add_thread(thread_t *thread)
+{
+    thread->next = NULL;
+    if(!ready_queue)
+    {
+        ready_queue = thread;
+    }
+    else
+    {
+        thread_t *temp = ready_queue;
+        while(temp->next)
+        {
+            temp = temp->next;
+        }
+        temp->next = thread;
+    }
+}
+
+thread_t* scheduler_pick_next_thread()
+{
+    if(!ready_queue)
+    {
+        return NULL;
+    }
+    thread_t *thread = ready_queue;
+    ready_queue = ready_queue->next;
+    thread->next = NULL;
+    return thread;
+}
