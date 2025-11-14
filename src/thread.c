@@ -4,6 +4,7 @@
 #include "context.h"
 
 static int next_id = 1;
+thread_t *current_thread = NULL;
 
 int thread_create(void (*start_routine)(void *), void *arg, int priority)
 {
@@ -23,4 +24,49 @@ int thread_create(void (*start_routine)(void *), void *arg, int priority)
     scheduler_add_thread(thread);
 
     return thread->thread_id;
+}
+
+void thread_yield()
+{
+    thread_t *next_thread = scheduler_pick_next_thread();
+    if(!next_thread)
+    {
+        return;
+    }
+    if(current_thread && current_thread->state != TERMINATED)
+    {
+        current_thread->state = READY;
+        scheduler_add_thread(current_thread);
+    }
+    thread_t *prev_thread = current_thread;
+    current_thread = next_thread;
+    current_thread->state = RUNNING;
+
+    if(prev_thread)
+    {
+        context_switch(prev_thread,current_thread);
+    }
+    else
+    {
+        setcontext(&current_thread->context);
+    }
+}
+
+void thread_exit()
+{
+    current_thread->state = TERMINATED;
+    free(current_thread->stack);
+
+    thread_t *next_thread = scheduler_pick_next_thread();
+    if(next_thread)
+    {
+        current_thread = next_thread;
+        current_thread->state = RUNNING;
+        setcontext(&current_thread->context);
+    }
+    else
+    {
+        printf("All Thread Finish\n");
+        exit(0);
+    }
 }
