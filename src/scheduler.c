@@ -17,12 +17,22 @@ void scheduler_add_thread(thread_t *thread)
     }
     else
     {
-        thread_t *temp = ready_queue;
-        while(temp->next)
+        thread_t *prev_thread = NULL, *current_thread = ready_queue;
+        while(current_thread && current_thread->priority >= thread->priority)
         {
-            temp = temp->next;
+            prev_thread = current_thread;
+            current_thread = current_thread->next;
         }
-        temp->next = thread;
+        if(!prev_thread)
+        {
+            thread->next = ready_queue;
+            ready_queue = thread;
+        }
+        else
+        {
+            thread->next = current_thread;
+            prev_thread->next = thread;
+        }
     }
     thread->next_all = all_thread;
     all_thread = thread;
