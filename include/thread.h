@@ -18,11 +18,14 @@ typedef struct thread
     thread_state state;
     void *thread_data;
     struct thread *next;
+    struct thread *next_all;
 } thread_t;
 
 int thread_create(void (*start_routine)(void *), void *arg, int priority);
 void thread_yield(void);
 int thread_join(int thread_id);
 void thread_exit(void);
+
+extern thread_t *current_thread;
 
 #endif

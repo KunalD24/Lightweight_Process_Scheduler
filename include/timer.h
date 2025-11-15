@@ -5,6 +5,6 @@
 #include<sys/time.h>
 
 void timer_init();
-void timer_handler();
+void timer_handler(int signum);
 
 #endif
