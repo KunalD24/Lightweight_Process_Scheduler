@@ -23,9 +23,20 @@ void context_create(thread_t *thread, void (*func)(void *), void *arg)
 
 void context_switch(thread_t *from, thread_t *to)
 {
-   if(swapcontext(&from->context, &to->context) == -1)
-   {
-    perror("Swapcontext failed");
-    exit(1);
-   }
+    if(!from)
+    {
+        if(setcontext(&to->context) == -1)
+        {
+            perror("setcontext");
+            exit(1);
+        }
+    }
+    else
+    {
+        if(swapcontext(&from->context, &to->context) == -1)
+        {
+            perror("Swapcontext failed");
+            exit(1);
+        }
+    }
 }
