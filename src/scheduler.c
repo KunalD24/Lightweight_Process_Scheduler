@@ -2,9 +2,14 @@
 #include<stdlib.h>
 
 thread_t *ready_queue = NULL;
+thread_t *all_thread = NULL;
 
 void scheduler_add_thread(thread_t *thread)
 {
+    if(!thread)
+    {
+        return;
+    }
     thread->next = NULL;
     if(!ready_queue)
     {
@@ -19,6 +24,8 @@ void scheduler_add_thread(thread_t *thread)
         }
         temp->next = thread;
     }
+    thread->next_all = all_thread;
+    all_thread = thread;
 }
 
 thread_t* scheduler_pick_next_thread()
