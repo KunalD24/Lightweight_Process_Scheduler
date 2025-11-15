@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 static int next_id = 1;
 thread_t *current_thread = NULL;
@@ -91,6 +92,24 @@ void thread_exit()
 
 int thread_join(int thread_id)
 {
-    (void)thread_id;
-    return -1;
+    thread_t *thread = all_thread;
+    while(thread)
+    {
+        if(thread->thread_id == thread_id)
+        {
+            break;
+        }
+        thread = thread->next_all;
+    }
+    if(!thread)
+    {
+        return -1;
+    }
+
+    while(thread->state != TERMINATED)
+    {
+        thread_yield();
+        usleep(1000);
+    }
+    return 0;
 }
